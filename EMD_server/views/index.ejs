@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Employee Documents</title>
+</head>
+<body>
+  <h2>Upload Employee Documents</h2>
+  <form action="http://192.168.1.20:3000/add-documents" method="POST" enctype="multipart/form-data">
+    
+    <!-- Employee ID (must be a valid ObjectId from your Employee collection) -->
+    <label for="employeeId">Employee ID:</label>
+    <input type="text" name="employeeId" required />
+    <br><br>
+
+    <!-- LEGAL DOCS -->
+    <label for="epra">EPRA:</label>
+    <input type="file" name="epra" multiple />
+    <br><br>
+
+    <label for="ea">EA:</label>
+    <input type="file" name="ea" multiple />
+    <br><br>
+
+    <label for="nda">NDA:</label>
+    <input type="file" name="nda" multiple />
+    <br><br>
+
+    <label for="offerLetter">Offer Letter:</label>
+    <input type="file" name="offerLetter" multiple />
+    <br><br>
+
+    <!-- <label for="resignationLetter">Resignation Letter:</label>
+    <input type="file" name="resignationLetter" multiple />
+    <br><br>
+
+    <label for="terminationLetter">Termination Letter:</label>
+    <input type="file" name="terminationLetter" multiple />
+    <br><br> -->
+
+    <!-- PROFESSIONAL DOCS -->
+    <label for="resume">Resume:</label>
+    <input type="file" name="resume" multiple />
+    <br><br>
+
+    <label for="certificates">Certificates:</label>
+    <input type="file" name="certificates" multiple />
+    <br><br>
+
+    <label for="experienceLetters">Experience Letters:</label>
+    <input type="file" name="experienceLetters" multiple />
+    <br><br>
+
+    <!-- PERSONAL DOCS -->
+    <label for="panCard">PAN Card:</label>
+    <input type="file" name="panCard" multiple />
+    <br><br>
+
+    <label for="aadharCard">Aadhar Card:</label>
+    <input type="file" name="aadharCard" multiple />
+    <br><br>
+
+    <label for="academicMarksheets">Academic Marksheets:</label>
+    <input type="file" name="academicMarksheets" multiple />
+    <br><br>
+
+    <label for="passportSizePhotos">Passport Size Photos:</label>
+    <input type="file" name="passportSizePhotos" multiple />
+    <br><br>
+
+    <button type="submit">Upload Documents</button>
+  </form>
+</body>
+</html>
