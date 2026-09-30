@@ -16,15 +16,28 @@ const app = express();
 
 
 // Connect to MongoDB
+const mongoOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 15000,
+};
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, mongoOptions)
   .then(() => {
     console.log('MongoDB connected');
   })
   .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err.message);
   });
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB runtime error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('MongoDB disconnected. Retrying connection may be needed.');
+});
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,7 +51,7 @@ app.use(cookieParser());
 // Serve static files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 // Specifically serve files from 'public/new_uploads' under the /new_uploads route
-app.use('/new_uploads', express.static(path.join(__dirname, 'new_uploads')));
+app.use('/new_uploads', express.static(path.join(__dirname, 'public', 'new_uploads')));
 
 const allowedOrigins = [
   'http://localhost:3001',
