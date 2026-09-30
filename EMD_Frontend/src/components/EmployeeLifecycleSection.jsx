@@ -318,7 +318,7 @@ const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' })
                 </span>
               )}
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-sm font-bold text-gray-800">
               {empType === 'Intern' ? (
                 <>Current Stipend: <span className="text-blue-600 font-extrabold">₹{currentStipend.toLocaleString('en-IN')}/mo</span></>
               ) : (
