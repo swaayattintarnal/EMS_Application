@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, X, ChevronRight, ChevronLeft, Upload } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 // Helper component for generic text/number inputs
 const InputField = ({ label, value, onChange, type = 'text', required = false, placeholder = '' }) => (
     <div>
@@ -138,7 +140,7 @@ const AddEmployee = () => {
     useEffect(() => {
         const fetchNextEmployeeId = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/next-employee-id?company=${encodeURIComponent(formData.company || '')}`);
+                const res = await fetch(`${API_BASE_URL}/next-employee-id?company=${encodeURIComponent(formData.company || '')}`);
                 const data = await res.json();
                 if (data.success && data.employee_id) {
                     setFormData(prev => ({ ...prev, employeeCode: data.employee_id }));
@@ -314,7 +316,7 @@ const AddEmployee = () => {
 
             console.log('Submitting payload:', personalDetailsPayload);
 
-            const response = await fetch('http://localhost:3000/add-employee-personal', {
+            const response = await fetch(`${API_BASE_URL}/add-employee-personal`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(personalDetailsPayload)
@@ -361,7 +363,7 @@ const AddEmployee = () => {
         });
 
         try {
-            const response = await fetch('http://localhost:3000/add-documents', {
+            const response = await fetch(`${API_BASE_URL}/add-documents`, {
                 method: 'POST',
                 body: uploadData
             });

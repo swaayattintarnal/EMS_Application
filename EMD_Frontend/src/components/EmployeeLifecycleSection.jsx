@@ -5,6 +5,8 @@ import {
   HelpCircle, ChevronRight, UserMinus
 } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' }) => {
   const [activeSubTab, setActiveSubTab] = useState('timeline'); // 'timeline', 'compensation', 'employment', 'status'
   
@@ -116,7 +118,7 @@ const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' })
     }
     setIsSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/employees/${employee._id}/salary/increase`, {
+      const res = await fetch(`${API_BASE_URL}/api/employees/${employee._id}/salary/increase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,7 +156,7 @@ const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' })
     }
     setIsSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/employees/${employee._id}/stipend/increase`, {
+      const res = await fetch(`${API_BASE_URL}/api/employees/${employee._id}/stipend/increase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -192,7 +194,7 @@ const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' })
     }
     setIsSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:3000/api/employees/${employee._id}/convert-to-full-time`, {
+      const res = await fetch(`${API_BASE_URL}/api/employees/${employee._id}/convert-to-full-time`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -240,7 +242,7 @@ const EmployeeLifecycleSection = ({ employee, onRefresh, themeColor = 'green' })
         last_working_date: statusForm.status === 'Left' ? statusForm.last_working_date : undefined,
       };
 
-      const res = await fetch(`http://localhost:3000/api/employees/${employee._id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/employees/${employee._id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

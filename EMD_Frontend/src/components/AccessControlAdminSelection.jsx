@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { UserCog, ArrowLeft, X } from 'lucide-react';
 import axios from 'axios'; 
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const AccessControlAdminSelection = () => {
   const { companyId } = useParams();
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const AccessControlAdminSelection = () => {
   useEffect(() => {
   const fetchAdmins = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/admins');
+      const res = await axios.get(API_BASE_URL,'/api/admins');
 
       console.log('Fetched:', res.data);
       setAdminList(res.data); 

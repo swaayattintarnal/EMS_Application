@@ -19,6 +19,7 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
 const currentYear = new Date().getFullYear();
@@ -40,7 +41,7 @@ const daysInMonth = (month, year) => new Date(year, month, 0).getDate();
 const COMPANY_INFO = {
   deepeigen: {
     key: 'deepeigen',
-    name: 'DeepEigen Technologies Pvt. Ltd.',
+    name: 'DEEP EIGEN PRIVATE LIMITED',
     titleColor: '#174cd2',
     footerText: (
       <>

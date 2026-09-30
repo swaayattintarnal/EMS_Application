@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import EmployeeProfile from './EmployeeProfileDeepeigen';
-import EmployeeProfiles from './EmployeeProfileSwaayattrobot'; 
-import { ArrowLeft } from 'lucide-react'; 
+import EmployeeProfiles from './EmployeeProfileSwaayattrobot';
+import { ArrowLeft } from 'lucide-react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const EmployeeProfileWrapper = () => {
   const { id } = useParams();
@@ -25,10 +26,10 @@ const EmployeeProfileWrapper = () => {
     const fetchEmployeeDetails = async () => {
       try {
         setLoading(true);
-        setError(null); 
+        setError(null);
 
-        const response = await fetch(`http://localhost:3000/get-one-emp-data/${id}`);
-        console.log("kuch bhi:",response)
+        const response = await fetch(`${API_BASE_URL}/get-one-emp-data/${id}`);
+        console.log("kuch bhi:", response)
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -37,7 +38,7 @@ const EmployeeProfileWrapper = () => {
 
         const data = await response.json();
         if (data.success) {
-        
+
           setEmployeeData(data.data);
         } else {
           setError(data.message || 'Failed to fetch employee details.');
@@ -56,9 +57,9 @@ const EmployeeProfileWrapper = () => {
       setLoading(false);
       setError("No employee ID provided in the URL.");
     }
-  }, [id]); 
+  }, [id]);
 
-  
+
 
   if (loading) {
     return (
@@ -88,7 +89,7 @@ const EmployeeProfileWrapper = () => {
     );
   }
 
- 
+
   if (!employeeData) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -105,13 +106,13 @@ const EmployeeProfileWrapper = () => {
     );
   }
 
-  
+
   const ProfileComponent = isDeepEigen ? EmployeeProfile : EmployeeProfiles;
 
   return (
     <ProfileComponent
       employee={employeeData}
-      onBack={() => navigate(-1)} 
+      onBack={() => navigate(-1)}
     />
   );
 };

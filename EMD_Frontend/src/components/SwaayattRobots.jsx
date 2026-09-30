@@ -20,13 +20,14 @@ const SwaayattRobots = () => {
   const [filterMonth, setFilterMonth] = useState('');
   const [filterYear, setFilterYear] = useState('');
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // GET all employees
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/get-all-employees');
+        const response = await fetch(`${API_BASE_URL}/get-all-employees`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -639,7 +640,7 @@ const SwaayattRobots = () => {
                     <div className="relative">
                       {employee.documents?.personalDocs?.passportSizePhotos?.[0] ? (
                         <img
-                          src={`http://localhost:3000/new_uploads/${employee.documents.personalDocs.passportSizePhotos[0].fileName}`}
+                          src={`${API_BASE_URL}/new_uploads/${employee.documents.personalDocs.passportSizePhotos[0].fileName}`}
                           alt={employee.name}
                           className="w-24 h-24 rounded-full object-cover border-4 border-purple-200 shadow"
                         />

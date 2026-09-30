@@ -6,6 +6,7 @@ import {
 import EmployeeLifecycleSection from './EmployeeLifecycleSection';
 import SalarySlipGenerator from './SalarySlipGenerator';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Helper component for generic text/number inputs
 const InputField = ({ label, value, onChange, type = 'text', required = false, className = '' }) => (
@@ -182,7 +183,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
 
     const fetchConfidentialFiles = async (employeeId) => {
         try {
-            const res = await fetch(`http://localhost:3000/get-confidential-documents/${employeeId}`);
+            const res = await fetch(`${API_BASE_URL}/get-confidential-documents/${employeeId}`);
             if (!res.ok) {
                 throw new Error('Failed to fetch confidential documents');
             }
@@ -246,7 +247,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
         let formDataFieldName = '';
 
         if (isConfidential) {
-            endpoint = `http://localhost:3000/upload-confidential-document/${employee._id}`;
+            endpoint = `${API_BASE_URL}/upload-confidential-document/${employee._id}`;
             formDataFieldName = 'confidentialFiles';
         } else {
             category = getDocumentCategory(docName);
@@ -254,7 +255,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                 alert("Missing required information (category or employee ID)");
                 return;
             }
-            endpoint = "http://localhost:3000/upload-document";
+            endpoint = `${API_BASE_URL}/upload-document`;
             formDataFieldName = "file";
         }
 
@@ -312,7 +313,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
 
     const handleDownload = (fileName) => {
         if (fileName) {
-            const fileUrl = `http://localhost:3000/new_uploads/${fileName}`;
+            const fileUrl = `${API_BASE_URL}/new_uploads/${fileName}`;
             window.open(fileUrl, '_blank');
         } else {
             console.warn("No file name provided for download.");
@@ -324,14 +325,14 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
         let endpoint = '';
 
         if (isConfidential) {
-            endpoint = `http://localhost:3000/delete-confidential-document/${employee._id}/${encodeURIComponent(fileName)}`;
+            endpoint = `${API_BASE_URL}/delete-confidential-document/${employee._id}/${encodeURIComponent(fileName)}`;
         } else {
             category = getDocumentCategory(docName);
             if (!category) {
                 alert('Invalid document category or docName could not be mapped.');
                 return;
             }
-            endpoint = `http://localhost:3000/delete-employee-document/${employee._id}/${category}/${encodeURIComponent(fileName)}`;
+            endpoint = `${API_BASE_URL}/delete-employee-document/${employee._id}/${category}/${encodeURIComponent(fileName)}`;
         }
 
         if (!employee || !employee._id) {
@@ -559,7 +560,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                 },
             };
 
-            const response = await fetch(`http://localhost:3000/update-employee/${employee._id}`, {
+            const response = await fetch(`${API_BASE_URL}/update-employee/${employee._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -603,7 +604,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                         <div className="flex items-center space-x-4">
                             {employee.documents.personal[3].files[0] ? (
                                 <img
-                                    src={`http://localhost:3000/new_uploads/${employee.documents.personal[3].files[0]}`}
+                                    src={`${API_BASE_URL}/new_uploads/${employee.documents.personal[3].files[0]}`}
                                     alt={employee.name}
                                     className="w-20 h-20 rounded-full object-cover border-4 border-purple-200"
                                 />
@@ -653,8 +654,8 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                         clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)',
                         backgroundColor:
                             employee.status === 'Current' ||
-                            employee.status === 'Working' ||
-                            employee.status === 'Working'
+                                employee.status === 'Working' ||
+                                employee.status === 'Working'
                                 ? 'rgba(9, 61, 28, 0.9)'
                                 : employee.status === 'Resigned'
                                     ? 'rgba(197, 9, 9, 0.9)'
@@ -742,7 +743,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                 : 'border-transparent text-gray-600 hover:text-green-600 hover:border-green-300'
                                 }`}
                         >
-                             Salary Slip
+                            Salary Slip
                         </button>
                     </nav>
                 </div>

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, UserCog, Briefcase, Mail, Phone, X } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const AccessControlEmployeeSelection = () => {
     const { companyId, adminName, adminId, adminLevel } = useParams();
     const navigate = useNavigate();
@@ -38,7 +40,7 @@ const AccessControlEmployeeSelection = () => {
                 companyId === 'swaayatt' ? 'swaayatt_robots' : companyId === 'deepeigen' ? 'DeepEigen' : companyId;
 
             const response = await fetch(
-                `http://localhost:3000/get-all-employees?companyFilter=${actualCompanyFilter}`
+                `${API_BASE_URL}/get-all-employees?companyFilter=${actualCompanyFilter}`
             );
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
