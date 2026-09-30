@@ -42,7 +42,7 @@ app.use('/new_uploads', express.static(path.join(__dirname, 'new_uploads')));
 
 const allowedOrigins = [
   'http://localhost:3001',
-  'https://ems-application-rbfd.onrender.com',
+  'https://ems-application-1.onrender.com',
 ];
 
 app.use(cors({
