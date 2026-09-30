@@ -1,3 +1,4 @@
+require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -17,12 +18,12 @@ const app = express();
 // Connect to MongoDB
 
 mongoose
-  .connect("mongodb+srv://vikaswork1116_db_user:d12vsfWawYBwORjS@cluster-1.dtrnvzp.mongodb.net/EMS_DB")
+  .connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log("MongoDB connected");
+    console.log('MongoDB connected');
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
+    console.error('MongoDB connection error:', err);
   });
 
 // View engine setup
