@@ -15,11 +15,15 @@ const app = express();
 
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/EMD_DB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+
+mongoose
+  .connect("mongodb+srv://vikaswork1116_db_user:d12vsfWawYBwORjS@cluster-1.dtrnvzp.mongodb.net/EMS_DB")
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -35,7 +35,7 @@ const documentSchema = new mongoose.Schema({
         offerLetter: [fileSchema],
         resignationLetter: [fileSchema],
         trl: [fileSchema], 
-        form16: [fileSchema],
+        declarationForm: [fileSchema],
     },
 
     professionalDocs: {

@@ -1,5 +1,10 @@
 const Employee = require("../../models/employees");
 const Document = require("../../models/documents");
+const SalaryHistory = require("../../models/SalaryHistory");
+const StipendHistory = require("../../models/StipendHistory");
+const EmploymentHistory = require("../../models/EmploymentHistory");
+const StatusHistory = require("../../models/StatusHistory");
+const EmployeeTimeline = require("../../models/EmployeeTimeline");
 
 const getEmployeeDetailsById = async (req, res) => {
   try {
@@ -12,7 +17,21 @@ const getEmployeeDetailsById = async (req, res) => {
       return res.status(404).json({ success: false, message: "Employee not found" });
     }
 
-    const employeeDocuments = await Document.findOne({ employeeId: id }).lean();
+    const [
+      employeeDocuments,
+      salaryHistory,
+      stipendHistory,
+      employmentHistory,
+      statusHistory,
+      timeline
+    ] = await Promise.all([
+      Document.findOne({ employeeId: id }).lean(),
+      SalaryHistory.find({ employee_id: id }).sort({ effective_date: -1, createdAt: -1 }).lean(),
+      StipendHistory.find({ employee_id: id }).sort({ effective_date: -1, createdAt: -1 }).lean(),
+      EmploymentHistory.find({ employee_id: id }).sort({ start_date: -1, createdAt: -1 }).lean(),
+      StatusHistory.find({ employee_id: id }).sort({ effective_date: -1, createdAt: -1 }).lean(),
+      EmployeeTimeline.find({ employee_id: id }).sort({ event_date: -1, createdAt: -1 }).lean()
+    ]);
 
     const allDocFields = {
       legalDocs: [
@@ -21,7 +40,7 @@ const getEmployeeDetailsById = async (req, res) => {
         { name: 'nda', displayName: 'NDA (Non-Disclosure Agreement)' },
         { name: 'offerLetter', displayName: 'Offer Letter' },
         { name: 'trl', displayName: 'TRL (Termination/Resignation Letter)' },
-        { name: 'form16', displayName: 'Form 16' }, 
+        { name: 'declarationForm', displayName: 'Declaration Form' }, 
       ],
       professionalDocs: [
         { name: 'resume', displayName: 'Resume / CV' },
@@ -57,6 +76,14 @@ const getEmployeeDetailsById = async (req, res) => {
 
     const employeeWithDocuments = {
       ...employee,
+      employment_type: employee.employment_type || (employee.category === 'Intern' ? 'Intern' : employee.category === 'Contractual' ? 'Contract' : 'Full-Time'),
+      current_salary: employee.current_salary || employee.salary || 0,
+      current_stipend: employee.current_stipend || employee.stipend || 0,
+      salaryHistory: salaryHistory || [],
+      stipendHistory: stipendHistory || [],
+      employmentHistory: employmentHistory || [],
+      statusHistory: statusHistory || [],
+      timeline: timeline || [],
       documents: organizedDocuments,
     };
 

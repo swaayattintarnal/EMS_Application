@@ -5,6 +5,9 @@ const path = require('path');
 
 const UPLOAD_DIR = 'public/new_uploads/'; 
 
+
+
+
 const addConfidentialDocs = async (req, res) => {
     try {
         const { employeeId } = req.params;
@@ -42,6 +45,8 @@ const addConfidentialDocs = async (req, res) => {
     }
 };
 
+
+
 const deleteConfidentialDocument = async (req, res) => {
     try {
         const { employeeId, fileName } = req.params;
@@ -77,6 +82,8 @@ const deleteConfidentialDocument = async (req, res) => {
     }
 };
 
+
+
 const getConfidentialDocuments = async (req, res) => {
     try {
         const { employeeId } = req.params;
@@ -93,6 +100,8 @@ const getConfidentialDocuments = async (req, res) => {
         res.status(500).json({ error: 'Internal server error.' });
     }
 };
+
+
 
 module.exports = {
     addConfidentialDocs,

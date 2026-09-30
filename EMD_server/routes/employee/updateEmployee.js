@@ -6,6 +6,27 @@ const updateEmployee = async (req, res) => {
         const updates = req.body; 
         // console.log("checking:",req.body)
 
+        if (updates.employment_type) {
+            if (updates.employment_type === 'Intern') updates.category = 'Intern';
+            else if (updates.employment_type === 'Contract') updates.category = 'Contractual';
+            else updates.category = 'Full-time';
+        } else if (updates.category) {
+            const lower = updates.category.toLowerCase();
+            if (lower === 'intern') updates.employment_type = 'Intern';
+            else if (lower === 'contractual' || lower === 'contract') updates.employment_type = 'Contract';
+            else updates.employment_type = 'Full-Time';
+        }
+
+        if (updates.salary !== undefined) {
+            updates.current_salary = Number(updates.salary);
+        }
+        if (updates.stipend !== undefined) {
+            updates.current_stipend = Number(updates.stipend);
+        }
+        if (updates.status === 'Current' || updates.status === 'Working') {
+            updates.status = 'Working';
+        }
+
         const employee = await Employee.findByIdAndUpdate(id, updates, { new: true, runValidators: true });
 
         if (!employee) {

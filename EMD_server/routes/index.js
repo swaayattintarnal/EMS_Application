@@ -15,12 +15,15 @@ const { deleteEmployeeDocument } = require('./employee/deleteEmployeeDocument');
 const { uploadDocument } = require('./employee/uploadNewFile');
 const { updateEmployee } = require('./employee/updateEmployee');
 const { addConfidentialDocs, deleteConfidentialDocument, getConfidentialDocuments } = require('./employee/confidentialDocsHandler');
+const lifecycleRoutes = require('./employee/lifecycleRoutes');
 
 const adminRoutes = require('./adminRoutes'); 
 
 const Employee = require('../models/employees'); 
 
 router.use('/admins', adminRoutes);
+router.use('/employees', lifecycleRoutes);
+router.use('/api/employees', lifecycleRoutes);
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -31,6 +34,7 @@ router.post('/admin-login', adminLogin);
 router.post('/admin-registration', adminRegister);
 router.post('/add-catagory', addCatagory);
 router.post('/add-company', addCompany);
+router.use('/', add_employee);
 router.post('/add-employee-personal', add_employee);
 router.post('/add-documents', multiUpload, addDocument);
 router.get('/get-all-employees', getAllEmployeesWithDetails);

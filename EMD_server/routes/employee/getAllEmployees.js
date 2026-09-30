@@ -28,6 +28,10 @@ exports.getAllEmployeesWithDetails = async (req, res) => {
 
     const result = employees.map(emp => ({
       ...emp,
+      employment_type: emp.employment_type || (emp.category === 'Intern' ? 'Intern' : emp.category === 'Contractual' ? 'Contract' : 'Full-Time'),
+      status: (emp.status === 'Current' || emp.status === 'Working') ? ' Working' : emp.status,
+      current_salary: emp.current_salary || emp.salary || 0,
+      current_stipend: emp.current_stipend || emp.stipend || 0,
       documents: docMap[emp._id.toString()] || null 
     }));
 

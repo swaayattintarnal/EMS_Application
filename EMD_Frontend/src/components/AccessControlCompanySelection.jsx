@@ -27,6 +27,8 @@ const AccessControlCompanySelection = () => {
     },
   ];
 
+
+  
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-50 to-purple-50 animate-gradient-xy"></div>

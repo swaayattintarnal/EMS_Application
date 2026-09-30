@@ -27,7 +27,8 @@ const multiUpload = upload.any([
   { name: 'nda', maxCount: 5 },
   { name: 'offerLetter', maxCount: 5 },
    { name: 'trl', maxCount: 5 }, 
-  { name: 'form16', maxCount: 5 },
+  { name: 'declarationForm', maxCount: 5 },
+  // { name: 'form16', maxCount: 5 },
   
   // Professional
   { name: 'resume', maxCount: 5 },

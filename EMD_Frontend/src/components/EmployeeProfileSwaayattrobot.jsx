@@ -3,6 +3,8 @@ import {
     ArrowLeft, User, Briefcase, GraduationCap, Heart, CreditCard, Phone as PhoneIcon, Users,
     Download, Upload, FileText, CheckCircle, XCircle, Clock, File, Edit, Save, X, Lock, HandCoins
 } from 'lucide-react';
+import EmployeeLifecycleSection from './EmployeeLifecycleSection';
+import SalarySlipGenerator from './SalarySlipGenerator';
 
 
 // Helper component for generic text/number inputs
@@ -64,6 +66,8 @@ const InfoSection = ({ title, icon, children }) => (
     </div>
 );
 
+
+
 const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
     const [activeTab, setActiveTab] = useState('overview');
     const [uploadingFile, setUploadingFile] = useState(null);
@@ -79,7 +83,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
         if (employee) {
             setEditableEmployeeData(JSON.parse(JSON.stringify(employee)));
             fetchConfidentialFiles(employee._id);
-            console.log(employee,"this is ep")
+            console.log(employee, "this is ep")
         }
         const level = localStorage.getItem('adminLevel');
         if (level) {
@@ -111,6 +115,8 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
             </div>
         );
     }
+
+
 
     const findAdminAccess = (accessControlArray, adminId, defaultAdminLevel) => {
         console.log('findAdminAccess called with:');
@@ -177,6 +183,9 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
             }
         }
     };
+
+
+
     const fetchConfidentialFiles = async (employeeId) => {
         try {
             const res = await fetch(`http://localhost:3000/get-confidential-documents/${employeeId}`);
@@ -425,13 +434,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                                                     )}
                                                                 </button>
                                                             )}
-                                                            <button
-                                                                onClick={() => handleDelete(docNameToPass, isConfidential ? doc.fileName : fileName, isConfidential)}
-                                                                className="p-1 text-red-600 hover:bg-red-100 rounded-full transition-colors duration-200"
-                                                                title="Delete"
-                                                            >
-                                                                <XCircle className="h-4 w-4" />
-                                                            </button>
+                                                            {/* Delete button removed per requirement: documents/data cannot be deleted */}
                                                         </div>
                                                     </div>
                                                 );
@@ -526,7 +529,8 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                     accountNumber: editableEmployeeData.bankDetails?.accountNumber,
                     ifscCode: editableEmployeeData.bankDetails?.ifscCode,
                     bankName: editableEmployeeData.bankDetails?.bankName,
-                    branchNumber: editableEmployeeData.bankDetails?.branchNumber,
+                    branchName: editableEmployeeData.bankDetails?.branchName || editableEmployeeData.bankDetails?.branchNumber,
+                    branchNumber: editableEmployeeData.bankDetails?.branchName || editableEmployeeData.bankDetails?.branchNumber,
                 },
                 salary: editableEmployeeData.salary,
                 ctc: editableEmployeeData.ctc,
@@ -621,42 +625,58 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                 </div>
                             )}
                             <div className="flex-1">
-                                <h1 className="text-3xl font-bold text-white">{employee.name}</h1>
-                                <p className="text-green-200 text-lg">{employee.designation}</p>
+                                <div className="flex items-center space-x-3">
+                                    <h1 className="text-3xl font-bold text-white">{employee.name}</h1>
+                                    {employee.employee_id && (
+                                        <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white rounded-lg text-xs font-mono font-semibold">
+                                            {employee.employee_id}
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-purple-200 text-lg mt-0.5">{employee.designation}</p>
                                 <div className="flex items-center space-x-3 mt-2">
-                                    <span className={`px-4 py-1.5 rounded-full text-sm font-semibold border ${getCategoryColor(employee.category)}`}>
-                                        {employee.category ? employee.category.charAt(0).toUpperCase() + employee.category.slice(1) : 'N/A'}
+                                    <span className={`px-4 py-1.5 rounded-full text-sm font-semibold border ${getCategoryColor(employee.employment_type || employee.category)}`}>
+                                        {employee.employment_type || (employee.category ? employee.category.charAt(0).toUpperCase() + employee.category.slice(1) : 'N/A')}
                                     </span>
-                                    <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-white text-purple-700 border border-purle-200">
-                                        {employee.company}
-                                    </span>
+                                    {employee.company && (
+                                        <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-white text-purple-700 border border-purple-200">
+                                            {employee.company}
+                                        </span>
+                                    )}
+                                    {employee.department && (
+                                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-900/50 text-purple-100 border border-purple-400/30">
+                                            {employee.department}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Employee Status */}
-                <div className="
-                    absolute top-0 right-8 rounded-b-lg text-white text-sm font-semibold
-                    flex items-center justify-center text-center
-                    "
+                {/* Employee Status Ribbon */}
+                <div
+                    className="absolute top-0 right-8 rounded-b-lg text-white text-xs font-bold flex items-center justify-center text-center shadow-lg"
                     style={{
                         height: '4.5rem',
                         width: '5.5rem',
                         clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 50% 85%, 0% 100%)',
-                        backgroundColor: employee.status === 'Current' || employee.status === 'Working' ? 'rgba(9, 61, 28, 0.8)' :
-                             employee.status === 'Resigned' ? 'rgba(197, 9, 9, 0.8)' :
-                                employee.status === 'Notice Period' ? 'rgba(207, 88, 2, 0.8)' :
-                                    'rgba(128, 128, 128, 0.8)'
+                        backgroundColor:
+                            employee.status === 'Current' ||
+                            employee.status === 'Working' ||
+                            employee.status === 'Working'
+                                ? 'rgba(9, 61, 28, 0.9)'
+                                : employee.status === 'Resigned'
+                                    ? 'rgba(197, 9, 9, 0.9)'
+                                    : employee.status === 'Notice Period'
+                                        ? 'rgba(207, 88, 2, 0.9)'
+                                        : 'rgba(100, 116, 139, 0.9)'
                     }}
                 >
-                    <span className="p-1">
-                        {String(employee.status) === 'Current' ? 'Working' :
-                            String(employee.status) === 'Resigned' ? 'Resigned' :
-                                String(employee.status) === 'Notice Period' ? 'Notice Period' :
-                                    String(employee.status)}
+                    <span className="p-1 leading-tight">
+                        {String(employee.status) === 'Current' || String(employee.status) === 'Working'
+                            ? 'Working'
+                            : String(employee.status)}
                     </span>
-
                 </div>
             </div>
 
@@ -675,6 +695,16 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                 Overview
                             </button>
                         )}
+
+                        <button
+                            onClick={() => setActiveTab('lifecycle')}
+                            className={`py-4 px-1 border-b-4 font-semibold text-base transition-colors duration-200 ${activeTab === 'lifecycle'
+                                ? 'border-indigo-600 text-purple-700'
+                                : 'border-transparent text-gray-600 hover:text-purple-600 hover:border-purple-300'
+                                }`}
+                        >
+                            Lifecycle & Timeline
+                        </button>
 
                         {currentAdminAccess.canViewBankDetails && (
                             <button
@@ -711,9 +741,21 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                 Confidential Files
                             </button>
                         )}
+
+                        <button
+                            onClick={() => setActiveTab('salarySlip')}
+                            className={`py-4 px-1 border-b-4 font-semibold text-base transition-colors duration-200 ${activeTab === 'salarySlip'
+                                ? 'border-indigo-600 text-purple-700'
+                                : 'border-transparent text-gray-600 hover:text-purple-600 hover:border-purple-300'
+                                }`}
+                        >
+                             Salary Slip
+                        </button>
                     </nav>
                 </div>
             </div>
+
+
 
             {/* Overview Tab */}
             <div className="container mx-auto px-6 py-8">
@@ -773,6 +815,8 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
 
                                             <InfoRow label="Current Address" value={employee.address} />
 
+                                            <InfoRow label="PAN Number" value={employee.panNumber || 'N/A'} />
+                                            <InfoRow label="Aadhaar Number" value={employee.aadharNumber || 'N/A'} />
                                             <InfoRow label="Date of Birth" value={employee.dateOfBirth ? new Date(employee.dateOfBirth).toLocaleDateString() : 'N/A'} />
                                             <InfoRow label="Birth Place" value={employee.birthPlace} />
                                             <InfoRow label="Nationality" value={employee.nationality} />
@@ -949,6 +993,19 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                     )}
                                 </div>
                             </InfoSection>
+
+
+
+                            {/* {currentAdminAccess.canViewPersonalDocuments && (
+                            <DocumentSection
+                                title="Personal Documents"
+                                documents={employee.documents.personal}
+                                uploadingFile={uploadingFile}
+                                handleNewFileUpload={handleNewFileUpload}
+                                handleDelete={handleDelete}
+                                handleDownload={handleDownload}
+                            />
+                        )} */}
                         </div>
                     </div>
                 )}
@@ -1037,7 +1094,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                         <InputField label="Account Number" value={editableEmployeeData.bankDetails?.accountNumber || ''} onChange={(val) => handleChange('bankDetails.accountNumber', val)} />
                                         <InputField label="IFSC Code" value={editableEmployeeData.bankDetails?.ifscCode || ''} onChange={(val) => handleChange('bankDetails.ifscCode', val)} />
                                         <InputField label="Bank Name" value={editableEmployeeData.bankDetails?.bankName || ''} onChange={(val) => handleChange('bankDetails.bankName', val)} />
-                                        <InputField label="Branch Number" value={editableEmployeeData.bankDetails?.branchNumber || ''} onChange={(val) => handleChange('bankDetails.branchNumber', val)} />
+                                        <InputField label="Branch Name" value={editableEmployeeData.bankDetails?.branchName || editableEmployeeData.bankDetails?.branchNumber || ''} onChange={(val) => { handleChange('bankDetails.branchName', val); handleChange('bankDetails.branchNumber', val); }} />
                                     </>
                                 ) : (
                                     <>
@@ -1045,7 +1102,7 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                                         <InfoRow label="Account Number" value={employee.bankDetails?.accountNumber} />
                                         <InfoRow label="IFSC Code" value={employee.bankDetails?.ifscCode} />
                                         <InfoRow label="Bank Name" value={employee.bankDetails?.bankName} />
-                                        <InfoRow label="Branch Number" value={employee.bankDetails?.branchNumber} />
+                                        <InfoRow label="Branch Name" value={employee.bankDetails?.branchName || employee.bankDetails?.branchNumber} />
                                     </>
                                 )}
                             </div>
@@ -1112,6 +1169,23 @@ const EmployeeProfile = ({ employee: employee, onBack, onEmployeeUpdate }) => {
                             isConfidential={true}
                         />
                     </div>
+                )}
+
+                {/* Lifecycle & History Tab */}
+                {activeTab === 'lifecycle' && (
+                    <EmployeeLifecycleSection
+                        employee={employee}
+                        themeColor="purple"
+                        onRefresh={() => window.location.reload()}
+                    />
+                )}
+
+                {/* Salary Slip Tab */}
+                {activeTab === 'salarySlip' && (
+                    <SalarySlipGenerator
+                        employee={employee}
+                        themeColor="purple"
+                    />
                 )}
             </div>
         </div>

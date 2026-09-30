@@ -12,6 +12,8 @@ function mapFileToSchema(file) {
   };
 }
 
+
+
 exports.addDocument = async (req, res) => {
   try {
     const { employeeId } = req.body;
@@ -28,29 +30,52 @@ exports.addDocument = async (req, res) => {
 
     let profilePhotoUrl = null;
 
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        const mappedFile = mapFileToSchema(file);
-        if (!mappedFile) return; 
+if (req.files && req.files.length > 0) {
+  req.files.forEach(file => {
+    const mappedFile = mapFileToSchema(file);
+    if (!mappedFile) return;
 
-        const field = file.fieldname; 
+    const field = file.fieldname;
 
-         if (['epra', 'ea', 'nda', 'offerLetter', 'trl', 'form16'].includes(field)) {
-          if (!legalDocs[field]) legalDocs[field] = [];
-          legalDocs[field].push(mappedFile);
-        } else if (['resume', 'certificates', 'experienceLetters'].includes(field)) {
-          if (!professionalDocs[field]) professionalDocs[field] = [];
-          professionalDocs[field].push(mappedFile);
-        } else if (['panCard', 'aadharCard', 'academicMarksheets', 'passportSizePhotos'].includes(field)) {
-          if (!personalDocs[field]) personalDocs[field] = [];
-          personalDocs[field].push(mappedFile);
+    // Legal Documents
+    if (
+      ['epra', 'ea', 'nda', 'offerLetter', 'trl', 'declarationForm', 'form16'].includes(field)
+    ) {
+      const fieldKey = field === 'form16' ? 'declarationForm' : field;
 
-          if (field === 'passportSizePhotos') {
-            profilePhotoUrl = mappedFile.fileName; 
-          }
-        }
-      });
+      if (!legalDocs[fieldKey]) {
+        legalDocs[fieldKey] = [];
+      }
+
+      legalDocs[fieldKey].push(mappedFile);
+
+    // Professional Documents
+    } else if (
+      ['resume', 'certificates', 'experienceLetters'].includes(field)
+    ) {
+      if (!professionalDocs[field]) {
+        professionalDocs[field] = [];
+      }
+
+      professionalDocs[field].push(mappedFile);
+
+    // Personal Documents
+    } else if (
+      ['panCard', 'aadharCard', 'academicMarksheets', 'passportSizePhotos'].includes(field)
+    ) {
+      if (!personalDocs[field]) {
+        personalDocs[field] = [];
+      }
+
+      personalDocs[field].push(mappedFile);
+
+      if (field === 'passportSizePhotos') {
+        profilePhotoUrl = mappedFile.fileName;
+      }
     }
+  });
+}
+  
 
     let existingDocument = await Document.findOne({ employeeId: trimmedId });
     let newDocument = null;

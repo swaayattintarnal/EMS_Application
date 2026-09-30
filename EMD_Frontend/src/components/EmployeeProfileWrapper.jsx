@@ -16,6 +16,11 @@ const EmployeeProfileWrapper = () => {
   const isDeepEigen = location.pathname.includes('/deep-eigen');
   const companyName = isDeepEigen ? 'DeepEigen' : 'Swaayatt Robots';
 
+
+
+
+
+
   useEffect(() => {
     const fetchEmployeeDetails = async () => {
       try {
@@ -52,6 +57,8 @@ const EmployeeProfileWrapper = () => {
       setError("No employee ID provided in the URL.");
     }
   }, [id]); 
+
+  
 
   if (loading) {
     return (
